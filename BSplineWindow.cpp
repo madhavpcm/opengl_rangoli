@@ -3,10 +3,10 @@
 #include<imgui.h>
 
 void BSplineWindow::mousePressEvent(QMouseEvent *e){
-    if(e->button() == Qt::RightButton){
         glm::vec2 nmc(e->pos().x(),e->pos().y());
         win2glcoord(nmc);
-        std::pair<int,int> cindex = closestKnot(nmc);
+        std::pair<int,int> cindex  = closestKnot(nmc);
+    if(e->button() == Qt::RightButton){
 
         if(cindex.second !=0){
             return;
@@ -19,15 +19,22 @@ void BSplineWindow::mousePressEvent(QMouseEvent *e){
 
             }
         }
-    }
+    }else
    if(e->button() == Qt::LeftButton && !m_isknotselected){
-        m_isknotselected = true;
 
+        if (cindex != std::make_pair(-1,-1))
+            m_isknotselected = true;
+
+    }else
+    if(e->button() == Qt::MiddleButton && !m_isknotselected){
+        m_knots.push_back(glm::vec3(nmc.x,nmc.y,0));//add new control point if no close one exists
+        std::sort(m_knots.begin(), m_knots.end(), [] (const glm::vec3& a,const glm::vec3& b){return a.x < b.x;});
+        getCurveControlPoints();
+        renderNow();
     }
-   else{
-       m_isknotselected = false;
-   }
-
+    else{
+        m_isknotselected = false;
+    }
 }
 
 void BSplineWindow::mouseReleaseEvent(QMouseEvent *e){
@@ -55,9 +62,9 @@ void BSplineWindow::mouseMoveEvent(QMouseEvent *e){
             renderNow();
         }
         else if (cindex.first < 0){
-            m_knots.push_back(glm::vec3(nmc.x,nmc.y,0));//add new control point if no close one exists
-            getCurveControlPoints();
-            renderNow();
+            //m_knots.push_back(glm::vec3(nmc.x,nmc.y,0));//add new control point if no close one exists
+            //getCurveControlPoints();
+            //renderNow();
         }
 
         //std::cout << nmc.x << " :: " << nmc.y << " \n";

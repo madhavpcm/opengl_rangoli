@@ -17,7 +17,6 @@
 #include <iostream>
 #include <atomic>
 //! [1]
-#include <backends/imgui_impl_opengl3.h>
 
 #include <QtImGui.h>
 
@@ -29,7 +28,6 @@ public:
 
     void initImgui();
     void initialize() override;
-    void initilaizeGL() override;
     void render() override;
     void getFirstControlPoints();
     void getCurveControlPoints();
