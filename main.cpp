@@ -51,6 +51,7 @@
 #include <QGuiApplication>
 #include "BSplineWindow.h"
 //! [2]
+
 int main(int argc, char **argv)
 {
     QGuiApplication app(argc, argv);

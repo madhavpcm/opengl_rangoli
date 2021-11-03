@@ -1,5 +1,6 @@
 
 #include "BSplineWindow.h"
+#include<imgui.h>
 
 void BSplineWindow::mousePressEvent(QMouseEvent *e){
     if(e->button() == Qt::RightButton){
@@ -70,8 +71,11 @@ void BSplineWindow::mouseDoubleClickEvent(QMouseEvent *e){
     }
 }
 
+void BSplineWindow::initImgui(){
+}
 void BSplineWindow::initialize()
 {
+    QtImGui::initialize(this);
     m_isknotselected = false;
     m_program = new QOpenGLShaderProgram(this);
     QFile vertexShaderSource(":/shaders/shaders/vertex.vert"),

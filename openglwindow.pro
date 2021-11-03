@@ -1,4 +1,5 @@
 include(openglwindow.pri)
+include(./include/qtimgui/qtimgui.pri)
 CONFIG += console
 
 SOURCES += \
