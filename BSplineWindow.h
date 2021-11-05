@@ -12,13 +12,17 @@
 #include <QMouseEvent>
 #include <Qt>
 #include <QDebug>
+
 #include <glm/vec2.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
+
 #include <iostream>
 #include <atomic>
 #include <imgui.h>
 #include <QtImGui.h>
+
+#include "curveobject.h"
 //! [1]
 
 
@@ -30,13 +34,12 @@ public:
 
     void initImgui();
     void initialize() override;
+
     void render() override;
     void renderTools();
-    void getFirstControlPoints();
-    void getCurveControlPoints();
+    void renderAxes();
+    void renderCurveObjects();
     std::pair<int,int> closestKnot(glm::vec2 &v);
-    std::vector<glm::vec3> updateControlPoints(std::vector<glm::vec3> & rhs);
-    GLfloat getBezier(GLfloat x, GLfloat k1, GLfloat c1, GLfloat c2, GLfloat k2);
     void win2glcoord(glm::vec2 & v);
     void dragMouse(int indx,glm::vec2 &nmc);
     void nearestPoint(glm::vec3 point, std::vector<glm::vec3>& list);
@@ -54,16 +57,14 @@ private:
     void mouseDoubleClickEvent(QMouseEvent *e) override;
 
     std::atomic_bool m_isknotselected;
-    std::atomic_bool m_isVxOn;
-    std::atomic_bool m_isHxOn;
+    std::atomic_bool m_isVxOn =0;
+    std::atomic_bool m_isHxOn =0;
     //void mouseDoubleClickEvent(QMouseEvent *e) override;
 
-    std::vector<glm::vec3> m_knots;
-    std::vector<glm::vec3> m_firstControlPoints;
-    std::vector<glm::vec3> m_secondControlPoints;
-    std::vector<std::vector<glm::vec3>> m_feedback;//all coords after rendering
-
+    std::vector<CurveObject> m_curves;
     QOpenGLShaderProgram *m_program = nullptr;
+
+    int m_sel = 0;
     int m_frame = 0;
 };
 //! [1]

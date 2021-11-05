@@ -4,6 +4,7 @@ CONFIG += console
 
 SOURCES += \
     BSplineWindow.cpp \
+    curveobject.cpp \
     main.cpp
 
 target.path = $$[QT_INSTALL_EXAMPLES]/gui/openglwindow
@@ -15,4 +16,5 @@ RESOURCES += \
     opengl.qrc
 
 HEADERS += \
-    BSplineWindow.h
+    BSplineWindow.h \
+    curveobject.h
