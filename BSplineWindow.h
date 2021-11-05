@@ -62,6 +62,7 @@ private:
     //void mouseDoubleClickEvent(QMouseEvent *e) override;
 
     std::vector<CurveObject> m_curves;
+    std::vector<std::pair<bool,bool>>m_hvx;
     QOpenGLShaderProgram *m_program = nullptr;
 
     int m_sel = 0;

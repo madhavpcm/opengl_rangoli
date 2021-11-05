@@ -2,10 +2,10 @@
 #include "BSplineWindow.h"
 
 void BSplineWindow::vxToggle(){
-    m_isVxOn = !m_isVxOn;
+    m_hvx[m_sel].second = !m_hvx[m_sel].second;
 }
 void BSplineWindow::hxToggle(){
-    m_isHxOn = !m_isHxOn;
+    m_hvx[m_sel].first= !m_hvx[m_sel].first;
 }
 void BSplineWindow::mousePressEvent(QMouseEvent *e){
         glm::vec2 nmc(e->pos().x(),e->pos().y());
@@ -125,26 +125,28 @@ void BSplineWindow::initialize()
         m_curves.push_back(CurveObject());
         m_curves[i].getCurveControlPoints();
     }
-
+    m_hvx = std::vector<std::pair<bool,bool>>(32,{0,0});
 
 }
 
 void BSplineWindow::renderCurveObjects(){
     for(int i=0; i < 32 ; i++){
         glm::vec3 color = glm::vec3(0,1,0) ;
+        bool hx = m_hvx[i].first;
+        bool vx = m_hvx[i].second;
         if(m_sel == i){
             m_program->setAttributeValue(m_colAttr,color.x,color.y,color.z);
-            m_curves[i].renderFCP();
+            m_curves[i].renderFCP(0,0);
             color = {0,0,1};
             m_program->setAttributeValue(m_colAttr,color.x,color.y,color.z);
-            m_curves[i].renderSCP();
+            m_curves[i].renderSCP(0,0);
             color = {1,1,1};
             m_program->setAttributeValue(m_colAttr,color.x,color.y,color.z);
-            m_curves[i].renderKnots();
+            m_curves[i].renderKnots(0,0);
         }
         color = m_curves[i].m_color;
         m_program->setAttributeValue(m_colAttr,color.x,color.y,color.z);
-        m_curves[i].renderCurve();
+        m_curves[i].renderCurve(hx,vx);
     }
 }
 void BSplineWindow::renderTools(){
@@ -164,13 +166,13 @@ void BSplineWindow::renderAxes(){
     m_program->setAttributeValue(m_colAttr,1,1,1);
     glLineStipple(1,0xebAA);
     glEnable(GL_LINE_STIPPLE);
-    if(m_isVxOn){
+    if(m_hvx[m_sel].second){
         glBegin(GL_LINES);
         glVertex3f(0,-10,0);
         glVertex3f(0,10,0);
         glEnd();
     }
-    if(m_isHxOn){
+    if(m_hvx[m_sel].first){
         glBegin(GL_LINES);
         glVertex3f(-10,0,0);
         glVertex3f(10,0,0);

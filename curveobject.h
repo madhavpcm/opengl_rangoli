@@ -18,10 +18,10 @@ public:
     std::vector<glm::vec3> updateControlPoints(std::vector<glm::vec3> &rhs);
     GLfloat getBezier(GLfloat x, GLfloat k1, GLfloat c1, GLfloat c2, GLfloat k2) ;
 
-    void renderFCP();
-    void renderSCP();
-    void renderKnots();
-    void renderCurve();
+    void renderFCP(bool hx, bool vx);
+    void renderSCP(bool hx, bool vx);
+    void renderKnots(bool hx, bool vx);
+    void renderCurve(bool hx, bool vx);
 
     glm::vec3 m_color = glm::vec3(1,1,1);
     std::vector<glm::vec3> m_knots;

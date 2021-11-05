@@ -7,32 +7,133 @@ CurveObject::CurveObject()
             { -4.0, -4.0,0.0}, { -2.0, 4.0,0.0},
             {2.0, -4.0,0.0}, {4.0, 4.0,0.0}
     };
-    for(glm::vec3 v : ctrlpoints)
+    for(glm::vec3 v : ctrlpoints){
         m_knots.push_back(v);
+    }
     getCurveControlPoints();
 }
-void CurveObject::renderFCP(){
+void CurveObject::renderFCP(bool hx, bool vx){
     glPointSize(5.0);
     glBegin(GL_POINTS);
-         for(glm::vec3 v : m_FCP)
-            glVertex3f(v.x,v.y,v.z);
+    for(glm::vec3 v : m_FCP)
+        glVertex3f(v.x,v.y,v.z);
     glEnd();
+    if(hx && vx){
+        glBegin(GL_LINE_STRIP);
+                for(glm::vec3 v : m_FCP){
+                    glVertex3f(-v.x,-v.y,v.z);
+                }
+        glEnd();
+        glBegin(GL_LINE_STRIP);
+                for(glm::vec3 v : m_FCP){
+                    glVertex3f(v.x,-v.y,v.z);
+                }
+        glEnd();
+        glBegin(GL_LINE_STRIP);
+                for(glm::vec3 v : m_FCP){
+                    glVertex3f(-v.x,v.y,v.z);
+                }
+        glEnd();
+    }
+    else if(!hx && vx){
+        glBegin(GL_LINE_STRIP);
+            for(glm::vec3 v : m_FCP){
+                glVertex3f(-v.x,v.y,v.z);
+            }
+        glEnd();
+
+    }
+    else if(hx && !vx){
+        glBegin(GL_LINE_STRIP);
+            for(glm::vec3 v : m_FCP){
+                glVertex3f(-v.x,v.y,v.z);
+            }
+        glEnd();
+
+    }
+
 }
-void CurveObject::renderSCP(){
+void CurveObject::renderSCP(bool hx, bool vx){
     glPointSize(5.0);
     glBegin(GL_POINTS);
     for(glm::vec3 v : m_SCP)
-       glVertex3f(v.x,v.y,v.z);
+        glVertex3f(v.x,v.y,v.z);
     glEnd();
+    if(hx && vx){
+        glBegin(GL_LINE_STRIP);
+                for(glm::vec3 v : m_SCP){
+                    glVertex3f(-v.x,-v.y,v.z);
+                }
+        glEnd();
+        glBegin(GL_LINE_STRIP);
+                for(glm::vec3 v : m_SCP){
+                    glVertex3f(v.x,-v.y,v.z);
+                }
+        glEnd();
+        glBegin(GL_LINE_STRIP);
+                for(glm::vec3 v : m_SCP){
+                    glVertex3f(-v.x,v.y,v.z);
+                }
+        glEnd();
+    }
+    else if(!hx && vx){
+        glBegin(GL_LINE_STRIP);
+            for(glm::vec3 v : m_SCP){
+                glVertex3f(-v.x,v.y,v.z);
+            }
+        glEnd();
+
+    }
+    else if(hx && !vx){
+        glBegin(GL_LINE_STRIP);
+            for(glm::vec3 v : m_SCP){
+                glVertex3f(-v.x,v.y,v.z);
+            }
+        glEnd();
+
+    }
 }
-void CurveObject::renderKnots(){
-    glPointSize(7.0);
+void CurveObject::renderKnots(bool hx, bool vx){
+    glPointSize(6.0);
     glBegin(GL_POINTS);
-        for(glm::vec3 v : m_knots)
-            glVertex3f(v.x,v.y,v.z);
+    for(glm::vec3 v : m_knots)
+        glVertex3f(v.x,v.y,v.z);
     glEnd();
+    if(hx && vx){
+        glBegin(GL_LINE_STRIP);
+                for(glm::vec3 v : m_knots){
+                    glVertex3f(-v.x,-v.y,v.z);
+                }
+        glEnd();
+        glBegin(GL_LINE_STRIP);
+                for(glm::vec3 v : m_knots){
+                    glVertex3f(v.x,-v.y,v.z);
+                }
+        glEnd();
+        glBegin(GL_LINE_STRIP);
+                for(glm::vec3 v : m_knots){
+                    glVertex3f(-v.x,v.y,v.z);
+                }
+        glEnd();
+    }
+    else if(!hx && vx){
+        glBegin(GL_LINE_STRIP);
+            for(glm::vec3 v : m_knots){
+                glVertex3f(-v.x,v.y,v.z);
+            }
+        glEnd();
+
+    }
+    else if(hx && !vx){
+        glBegin(GL_LINE_STRIP);
+            for(glm::vec3 v : m_knots){
+                glVertex3f(-v.x,v.y,v.z);
+            }
+        glEnd();
+
+    }
 }
-void CurveObject::renderCurve(){
+void CurveObject::renderCurve(bool hx,bool vx){
     m_feedback.clear();
     m_feedback = std::vector<std::vector<glm::vec3>>(m_FCP.size(),
                                                      std::vector<glm::vec3>(1000,glm::vec3(0,0,0)));
@@ -49,17 +150,57 @@ void CurveObject::renderCurve(){
                                         getBezier(j/1000.0,curve[0].y,curve[1].y,curve[2].y,curve[3].y),
                                         0);
                 glVertex3fv(&m_feedback[i][j][0]);
-                //if(m_isHxOn && m_isVxOn){
-                //   	m
-                //}
-                //else if(m_isHxOn && !m_isVxOn){
-                //
-                //}
-                //else if(!m_isHxOn && m_isVxOn){
-                //
-                //}
             }
         glEnd();
+
+        if(hx && vx){
+            glBegin(GL_LINE_STRIP);
+                    for(int j=0; j < 1000 ; j++){
+                        GLfloat x,y;
+                        x = -m_feedback[i][j][0];
+                        y = m_feedback[i][j][1];
+                        glVertex3f(x,y,0);
+                    }
+            glEnd();
+            glBegin(GL_LINE_STRIP);
+                    for(int j=0; j < 1000 ; j++){
+                        GLfloat x,y;
+                        x = m_feedback[i][j][0];
+                        y = -m_feedback[i][j][1];
+                        glVertex3f(x,y,0);
+                    }
+            glEnd();
+            glBegin(GL_LINE_STRIP);
+                    for(int j=0; j < 1000 ; j++){
+                        GLfloat x,y;
+                        x = -m_feedback[i][j][0];
+                        y = -m_feedback[i][j][1];
+                        glVertex3f(x,y,0);
+                    }
+            glEnd();
+        }
+        else if(!hx && vx){
+            glBegin(GL_LINE_STRIP);
+                    for(int j=0; j < 1000 ; j++){
+                        GLfloat x,y;
+                        x = -m_feedback[i][j][0];
+                        y = m_feedback[i][j][1];
+                        glVertex3f(x,y,0);
+                    }
+            glEnd();
+
+        }
+        else if(hx && !vx){
+            glBegin(GL_LINE_STRIP);
+                    for(int j=0; j < 1000 ; j++){
+                        GLfloat x,y;
+                        x = m_feedback[i][j][0];
+                        y = -m_feedback[i][j][1];
+                        glVertex3f(x,y,0);
+                    }
+            glEnd();
+
+        }
         //glDisable(GL_MAP1_VERTEX_3);
 
 
