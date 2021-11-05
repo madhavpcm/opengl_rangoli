@@ -151,6 +151,7 @@ void BSplineWindow::renderCurveObjects(){
 }
 void BSplineWindow::renderTools(){
     QtImGui::newFrame();
+    //ImGui::SetNextWindowSize(ImVec2(0,0));
     ImGui::Begin("Tools");
         //ImGui::SetWindowPos(ImVec2(0,0),0);
         if(ImGui::Button("Hx"))
@@ -197,7 +198,7 @@ void BSplineWindow::render()
     m_program->bind();
 
     QMatrix4x4 matrix;
-    matrix.ortho(-10.0,10,-10,10,0.1f,100.0f);
+    matrix.ortho(-10.0,10.0,-10.0,10.0,0.1f,100.0f);
     //matrix.perspective(60.0f, 4.0f / 3.0f, 0.1f, 100.0f);
     matrix.translate(0, 0, -100);
    // matrix.rotate(100.0f * m_frame / screen()->refreshRate(), 0, 1, 0);

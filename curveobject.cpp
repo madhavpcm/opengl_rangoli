@@ -4,8 +4,8 @@ CurveObject::CurveObject()
 {
     m_color = glm::vec3(0);
     static std::vector<glm::vec3> ctrlpoints = {
-            { -4.0, -4.0,0.0}, { -2.0, 4.0,0.0},
-            {2.0, -4.0,0.0}, {4.0, 4.0,0.0}
+            { -1.0, 0.0,0.0}, { 0.0, 1.0,0.0},
+            {1.0, -0.0,0.0}
     };
     for(glm::vec3 v : ctrlpoints){
         m_knots.push_back(v);
