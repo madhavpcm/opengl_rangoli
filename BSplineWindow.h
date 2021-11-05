@@ -14,11 +14,13 @@
 #include <QDebug>
 #include <glm/vec2.hpp>
 #include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <iostream>
 #include <atomic>
+#include <imgui.h>
+#include <QtImGui.h>
 //! [1]
 
-#include <QtImGui.h>
 
 class BSplineWindow : public OpenGLWindow
 {
@@ -29,6 +31,7 @@ public:
     void initImgui();
     void initialize() override;
     void render() override;
+    void renderTools();
     void getFirstControlPoints();
     void getCurveControlPoints();
     std::pair<int,int> closestKnot(glm::vec2 &v);
@@ -37,6 +40,8 @@ public:
     void win2glcoord(glm::vec2 & v);
     void dragMouse(int indx,glm::vec2 &nmc);
     void nearestPoint(glm::vec3 point, std::vector<glm::vec3>& list);
+    void vxToggle();
+    void hxToggle();
 private:
     GLint m_posAttr = 0;
     GLint m_colAttr = 0;
@@ -49,6 +54,8 @@ private:
     void mouseDoubleClickEvent(QMouseEvent *e) override;
 
     std::atomic_bool m_isknotselected;
+    std::atomic_bool m_isVxOn;
+    std::atomic_bool m_isHxOn;
     //void mouseDoubleClickEvent(QMouseEvent *e) override;
 
     std::vector<glm::vec3> m_knots;

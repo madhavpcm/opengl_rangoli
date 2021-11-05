@@ -1,13 +1,17 @@
 
 #include "BSplineWindow.h"
-#include<imgui.h>
 
+void BSplineWindow::vxToggle(){
+    m_isVxOn = !m_isVxOn;
+}
+void BSplineWindow::hxToggle(){
+    m_isHxOn = !m_isHxOn;
+}
 void BSplineWindow::mousePressEvent(QMouseEvent *e){
         glm::vec2 nmc(e->pos().x(),e->pos().y());
         win2glcoord(nmc);
         std::pair<int,int> cindex  = closestKnot(nmc);
     if(e->button() == Qt::RightButton){
-
         if(cindex.second !=0){
             return;
         }
@@ -16,14 +20,15 @@ void BSplineWindow::mousePressEvent(QMouseEvent *e){
                 m_knots.erase(m_knots.begin() + cindex.first);
                 getCurveControlPoints();
                 renderNow();
-
             }
         }
+        return;
     }else
    if(e->button() == Qt::LeftButton && !m_isknotselected){
 
         if (cindex != std::make_pair(-1,-1))
             m_isknotselected = true;
+        return;
 
     }else
     if(e->button() == Qt::MiddleButton && !m_isknotselected){
@@ -31,10 +36,9 @@ void BSplineWindow::mousePressEvent(QMouseEvent *e){
         std::sort(m_knots.begin(), m_knots.end(), [] (const glm::vec3& a,const glm::vec3& b){return a.x < b.x;});
         getCurveControlPoints();
         renderNow();
+        return;
     }
-    else{
-        m_isknotselected = false;
-    }
+    m_isknotselected = false;
 }
 
 void BSplineWindow::mouseReleaseEvent(QMouseEvent *e){
@@ -82,7 +86,6 @@ void BSplineWindow::initImgui(){
 }
 void BSplineWindow::initialize()
 {
-    QtImGui::initialize(this);
     m_isknotselected = false;
     m_program = new QOpenGLShaderProgram(this);
     QFile vertexShaderSource(":/shaders/shaders/vertex.vert"),
@@ -117,6 +120,7 @@ void BSplineWindow::initialize()
     m_coord2d = m_program->attributeLocation("coord2d");
     Q_ASSERT(m_coord2d != -1);
 
+    QtImGui::initialize(this);
     static std::vector<glm::vec3> ctrlpoints = {
             { -4.0, -4.0,0.0}, { -2.0, 4.0,0.0},
             {2.0, -4.0,0.0}, {4.0, 4.0,0.0}
@@ -125,10 +129,30 @@ void BSplineWindow::initialize()
         m_knots.push_back(v);
 
     getCurveControlPoints();
+
 }
 
+void BSplineWindow::renderTools(){
+    QtImGui::newFrame();
+    ImGui::Begin("Tools");
+        ImGui::SetWindowPos(ImVec2(0,0),0);
+        ImGui::SetWindowSize(ImVec2(80,720),0);
+        if(ImGui::Button("Hx"))
+            hxToggle();
+        if(ImGui::Button("Vx"))
+            vxToggle();
+    ImGui::End();
+}
+void BSplineWindow::renderAxes(){
+
+}
 void BSplineWindow::render()
 {
+
+    glm::vec3 clear_color(0,0,0);
+
+    renderTools();
+
     const qreal retinaScale = devicePixelRatio();
     glViewport(0, 0, width() * retinaScale, height() * retinaScale);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -194,8 +218,12 @@ void BSplineWindow::render()
     glEnd();
     m_program->disableAttributeArray(m_colAttr);
     //bezBuffer.release();
+    renderAxes();
     m_program->release();
 
+
+    ImGui::Render();
+    QtImGui::render();
     ++m_frame;
 }
 
